@@ -11,6 +11,7 @@
   "author": "Luís Vitor",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "express": "^4.17.1",
     "knex": "^0.21.17",
     "pg": "^8.5.1"
