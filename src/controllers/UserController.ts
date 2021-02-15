@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import knex from '../database/connection'
-import registerValidation from '../services/validation'
+import validation from '../services/validation'
 import bcrypt from 'bcryptjs'
 
 class UserController {
@@ -8,8 +8,8 @@ class UserController {
     const { name, username, email, password } = request.body
     
     // validate data
-    const { error } = registerValidation(request.body)
-    if (error) return response.status(400).json({ message: error.details[0].message })
+    const { error } = validation.registerValidation(request.body)
+    if (error) return response.status(422).json({ message: error.details[0].message })
 
     // check if username or email already exists
     
