@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import knex from '../database/connection'
 import registerValidation from '../services/validation'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
 class UserController {
   async create(request: Request, response: Response) {
@@ -12,10 +12,9 @@ class UserController {
     if (error) return response.status(400).json({ message: error.details[0].message })
 
     // check if username or email already exists
-    console.log(username)
-    console.log(email)
+    
     const user = await knex('users').where('username', username).orWhere('email', email).select('*')
-    console.log(user)
+    
     if (user[0]) {
       return response.status(400).json({ error: 'username or email already exists' })
     }
