@@ -1,5 +1,5 @@
-import validation from '../utils/validation'
 import knex from '../database/connection'
+import {ERR_DUPLICATE_EMAIL}  from '../utils/errorTypes'
 
 interface UserData {
     name: string,
@@ -9,14 +9,9 @@ interface UserData {
 }   
 
 const create = async (userData:UserData) => {
-    const { error } = validation.registerValidation(userData)
-    if (error) {
-        //console.log('invalid data')
-    }
-
     const userExists = await knex('users').where('email', userData.email).select('*')
     if (userExists[0]){
-        // console.log('user already exists')
+        throw new Error(ERR_DUPLICATE_EMAIL)
     }
 
     return await knex('users').insert({
