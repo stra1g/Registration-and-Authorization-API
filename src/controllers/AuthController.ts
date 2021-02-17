@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import 'dotenv/config'
 import authenticate from '../auth/authenticate'
-import { ERR_USER_NOT_FOUND, ERR_INVALID_DATA } from '../utils/errorTypes'
+import { ERR_USER_NOT_FOUND, ERR_INVALID_DATA, ERR_INVALID_TOKEN } from '../utils/errorTypes'
 
 class AuthController {
   async login(request: Request, response: Response) {
@@ -18,6 +18,9 @@ class AuthController {
           break
         case ERR_USER_NOT_FOUND:
           response.boom.notFound('email or password invalid')
+          break
+        case ERR_INVALID_TOKEN:
+          response.boom.unauthorized('invalid token')
           break
         default:
           response.boom.badImplementation(e)
