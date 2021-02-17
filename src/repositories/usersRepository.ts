@@ -1,4 +1,4 @@
-import validation from '../services/validation'
+import validation from '../utils/validation'
 import knex from '../database/connection'
 
 interface UserData {

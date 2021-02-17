@@ -1,8 +1,8 @@
 import knex from '../database/connection'
-import bcrypt from 'bcryptjs'
 import { LOGIN_EXPIRATION_TIME } from '../auth/confs'
 import Token from '../auth/token'
-import validation from '../services/validation'
+import validation from '../utils/validation'
+import hash from '../utils/hash'
 
 const login = async (email:string, password:string) => {
 
@@ -17,7 +17,7 @@ const login = async (email:string, password:string) => {
         // console.log('user not found')
     }
 
-    const passwordIsOk = await bcrypt.compare(password, user[0].password)
+    const passwordIsOk = await hash.compare(password, user[0].password)
     if (!passwordIsOk) {
         // console.log('user or password incorrect')
     }
