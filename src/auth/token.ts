@@ -1,7 +1,17 @@
 import jwt from 'jsonwebtoken' 
+import jwt_decode from 'jwt-decode'
 import { ALGORITHM } from './confs'
 import 'dotenv/config'
 import { ERR_INVALID_TOKEN } from '../utils/errorTypes'
+
+interface JWTData {
+    iss: string,
+    sub: Number,
+    exp: Number,
+    data: {
+      user_id: Number
+    }
+  }
 
 const generate = (payload:Object) => (
     new Promise(resolve => {
@@ -27,4 +37,6 @@ const verifyToken = (data:string) => (
     })
 )
 
-export default { generate, verifyToken }
+const decode = (data:string) => jwt_decode<JWTData>(data)
+
+export default { generate, verifyToken, decode }

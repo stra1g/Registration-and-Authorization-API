@@ -1,9 +1,10 @@
 import knex from '../database/connection'
-import { LOGIN_EXPIRATION_TIME } from '../auth/confs'
+import { LOGIN_EXPIRATION_TIME, BLACKLIST_CACHE_PREFIX } from '../auth/confs'
 import Token from '../auth/token'
 import validation from '../utils/validation'
 import hash from '../utils/hash'
 import { ERR_INVALID_DATA, ERR_USER_NOT_FOUND } from '../utils/errorTypes'
+import Cache from '../repositories/cacheRepository'
 
 const login = async (email:string, password:string) => {
 
@@ -26,12 +27,19 @@ const login = async (email:string, password:string) => {
     const JWTData = {
         iss: 'reg_auth_api',
         sub: user[0].id,
-        exp: Math.floor(Date.now() / 1000) + LOGIN_EXPIRATION_TIME
+        exp: Math.floor(Date.now() / 1000) + LOGIN_EXPIRATION_TIME,
+        data: {
+            user_id: user[0].id
+        }
     }
 
     const token = await Token.generate(JWTData)
 
-    return token
+    return { user, token }
 }   
 
-export default { login }
+const logout = async (value:string) => {
+    return Cache.set(`${BLACKLIST_CACHE_PREFIX}${value}`, '1', LOGIN_EXPIRATION_TIME)
+}
+
+export default { login, logout }

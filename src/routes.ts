@@ -16,5 +16,6 @@ routes.post('/login', authController.login)
 routes.use(auth)
 
 routes.get('/testJWT', testController.test)
+routes.post('/logout', authController.logout)
 
 export default routes
