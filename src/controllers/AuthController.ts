@@ -21,9 +21,14 @@ class AuthController {
     try {
       const {user, token} = await authenticate.login(email, password)
 
-      await userRepository.setCache(user[0])
+      await userRepository.setCache(user)
 
-      return response.status(200).json({ token })
+      const filteredUser = {
+        id: user.id,
+        name: user.name
+      }
+
+      return response.status(200).json({ token, filteredUser })
     } catch (e) {
       switch (e.message) {
         case ERR_INVALID_DATA:
