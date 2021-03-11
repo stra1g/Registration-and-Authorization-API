@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import Cookies from 'cookies'
 import 'dotenv/config'
 import authenticate from '../auth/authenticate'
 import userRepository from '../repositories/usersRepository'
@@ -17,6 +18,7 @@ interface JWTData {
 class AuthController {
   async login(request: Request, response: Response) {
     const { email, password } = request.body
+    const cookies = new Cookies(request, response)
 
     try {
       const {user, token} = await authenticate.login(email, password)
@@ -28,7 +30,10 @@ class AuthController {
         name: user.name
       }
 
-      return response.status(200).json({ token, filteredUser })
+      cookies.set('auth_token', String(token))
+
+      return response.status(200)
+        .json({ token, filteredUser })
     } catch (e) {
       switch (e.message) {
         case ERR_INVALID_DATA:
