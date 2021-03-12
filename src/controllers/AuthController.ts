@@ -51,15 +51,19 @@ class AuthController {
   async logout (request: Request, response: Response) {
     const authHeader = request.headers.authorization
 
-    const token = authHeader?.split(' ')[1]
+    const cookies = new Cookies(request, response)
+    const authCookie = cookies.get('auth_token')
+    let token = '';
 
-    if (!token) {
-      return response.boom.unauthorized('you need a valid token')
+    if (authHeader){
+      token = authHeader?.split(' ')[1]
+    } else if (authCookie){
+      token = authCookie
     }
-
+    
     try {
       const decodedJWT = Token.decode(token)
-      const userId = decodedJWT?.data.user_id
+      const userId = decodedJWT.data.user_id
 
       await Promise.all([
         authenticate.logout(token),
