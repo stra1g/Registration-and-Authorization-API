@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
-import Cookies from 'cookies'
+import Cookies from 'universal-cookie'
 import Token from '../auth/token'
 import { ERR_INVALID_TOKEN } from '../utils/errorTypes'
 import Cache from '../repositories/cacheRepository'
@@ -12,7 +12,7 @@ async function validate(value:string){
 }
 
 export const auth = async (request: Request, response: Response, next: NextFunction) => {
-  const cookies = new Cookies(request, response)
+  const cookies = new Cookies(request.headers.cookie)
 
   const authHeader = request.headers.authorization
   const authCookie = cookies.get('auth_token')

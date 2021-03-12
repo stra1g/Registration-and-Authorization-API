@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import Cookies from 'cookies'
+import Cookies from 'universal-cookie'
 import 'dotenv/config'
 import authenticate from '../auth/authenticate'
 import userRepository from '../repositories/usersRepository'
@@ -18,7 +18,7 @@ interface JWTData {
 class AuthController {
   async login(request: Request, response: Response) {
     const { email, password } = request.body
-    const cookies = new Cookies(request, response)
+    const cookies = new Cookies(request.headers.cookie)
 
     try {
       const {user, token} = await authenticate.login(email, password)
@@ -27,7 +27,8 @@ class AuthController {
 
       const userId = user.id
 
-      cookies.set('auth_token', String(token))
+      //cookies.set('myCat', 'Pacman', { path: '/' });
+      response.cookie('auth_token', String(token), { path: '/', httpOnly: true})
 
       return response.status(200)
         .json({ token, userId })
@@ -51,8 +52,9 @@ class AuthController {
   async logout (request: Request, response: Response) {
     const authHeader = request.headers.authorization
 
-    const cookies = new Cookies(request, response)
+    const cookies = new Cookies(request.headers.cookie)
     const authCookie = cookies.get('auth_token')
+
     let token = '';
 
     if (authHeader){
@@ -67,7 +69,8 @@ class AuthController {
 
       await Promise.all([
         authenticate.logout(token),
-        userRepository.removeCache(userId)
+        userRepository.removeCache(userId),
+        response.clearCookie('auth_token')
       ])
 
       return response.status(200).json({message: 'unlogged'})
