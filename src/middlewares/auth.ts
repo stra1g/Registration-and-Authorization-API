@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
+import Cookies from 'cookies'
 import Token from '../auth/token'
 import { ERR_INVALID_TOKEN } from '../utils/errorTypes'
 import Cache from '../repositories/cacheRepository'
@@ -11,9 +12,18 @@ async function validate(value:string){
 }
 
 export const auth = async (request: Request, response: Response, next: NextFunction) => {
+  const cookies = new Cookies(request, response)
+
   const authHeader = request.headers.authorization
-  
-  const token = authHeader?.split(' ')[1]
+  const authCookie = cookies.get('auth_token')
+  let token = undefined;
+
+  if (authHeader){
+    token = authHeader?.split(' ')[1]
+  } else if (authCookie){
+    token = authCookie
+  }
+
   if (!token) {
     return response.boom.unauthorized('you need a valid token')
   }
