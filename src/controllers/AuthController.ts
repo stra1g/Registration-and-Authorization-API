@@ -25,15 +25,12 @@ class AuthController {
 
       await userRepository.setCache(user)
 
-      const filteredUser = {
-        id: user.id,
-        name: user.name
-      }
+      const userId = user.id
 
       cookies.set('auth_token', String(token))
 
       return response.status(200)
-        .json({ token, filteredUser })
+        .json({ token, userId })
     } catch (e) {
       switch (e.message) {
         case ERR_INVALID_DATA:
