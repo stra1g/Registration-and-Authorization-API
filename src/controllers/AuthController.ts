@@ -18,7 +18,6 @@ interface JWTData {
 class AuthController {
   async login(request: Request, response: Response) {
     const { email, password } = request.body
-    const cookies = new Cookies(request.headers.cookie)
 
     try {
       const {user, token} = await authenticate.login(email, password)
@@ -27,7 +26,6 @@ class AuthController {
 
       const userId = user.id
 
-      //cookies.set('myCat', 'Pacman', { path: '/' });
       response.cookie('auth_token', String(token), { path: '/', httpOnly: true})
 
       return response.status(200)
@@ -38,7 +36,7 @@ class AuthController {
           response.boom.badData('invalid data')
           break
         case ERR_USER_NOT_FOUND:
-          response.boom.notFound('email or password invalid')
+          response.boom.unauthorized('email or password invalid')
           break
         case ERR_INVALID_TOKEN:
           response.boom.unauthorized('invalid token')
@@ -54,7 +52,7 @@ class AuthController {
 
     const cookies = new Cookies(request.headers.cookie)
     const authCookie = cookies.get('auth_token')
-
+    
     let token = '';
 
     if (authHeader){
