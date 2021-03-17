@@ -39,6 +39,15 @@ const findByEmail = async (email: string) => {
   return false
 }
 
+const findByUsername = async (username: string) => {
+  const user = await knex('users').where('username', username).select('*').first()
+
+  if (user){
+    return true
+  }
+  return false
+}
+
 const setCache = (user:UserData) => (
     Cache.set(`${PREFIX_CACHE}${user.id}`, JSON.stringify(user), LOGIN_EXPIRATION_TIME)
 )
@@ -50,6 +59,7 @@ const removeCache = (userId:Number) => (
 export default { 
     create,
     findByEmail,
+    findByUsername,
     setCache,
     removeCache
 }

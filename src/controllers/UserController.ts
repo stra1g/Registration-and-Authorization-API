@@ -34,9 +34,17 @@ class UserController {
     
   }
   async findByEmail(request: Request, response: Response){
-    const email = request.query.email 
+    const { email } = request.query 
 
     const userExists = await userRepository.findByEmail(String(email))
+    
+    return response.status(200).json({userExists})
+  }
+
+  async findByUsername(request: Request, response: Response){
+    const { username } = request.query 
+
+    const userExists = await userRepository.findByUsername(String(username))
     
     return response.status(200).json({userExists})
   }
