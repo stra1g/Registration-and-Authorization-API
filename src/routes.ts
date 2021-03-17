@@ -11,6 +11,7 @@ const authController = new AuthController()
 const testController = new TestController()
 
 routes.post('/register', userController.create)
+routes.get('/register/checkEmail', userController.findByEmail)
 routes.post('/login', authController.login)
 
 routes.use(auth)

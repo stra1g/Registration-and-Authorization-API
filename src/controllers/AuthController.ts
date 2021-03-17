@@ -33,16 +33,16 @@ class AuthController {
     } catch (e) {
       switch (e.message) {
         case ERR_INVALID_DATA:
-          response.boom.badData('invalid data')
+          return response.boom.badData('invalid data')
           break
         case ERR_USER_NOT_FOUND:
-          response.boom.unauthorized('email or password invalid')
+          return response.boom.unauthorized('email or password invalid')
           break
         case ERR_INVALID_TOKEN:
-          response.boom.unauthorized('invalid token')
+          return response.boom.unauthorized('invalid token')
           break
         default:
-          response.boom.badImplementation(e)
+          return response.boom.badImplementation(e)
       }
     }
   }
