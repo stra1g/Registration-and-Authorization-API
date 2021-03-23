@@ -4,7 +4,7 @@ import Cache from '../repositories/cacheRepository'
 import { LOGIN_EXPIRATION_TIME } from '../auth/confs'
 
 interface UserData {
-    id: Number,
+    id: number,
     name: string,
     username: string,
     email: string, 
