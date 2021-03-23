@@ -19,6 +19,17 @@ class ResetPasswordController {
     }
 
     const resetToken = await tokensRepository.generate()
+
+    const expiresDate = new Date()
+    expiresDate.setUTCHours(expiresDate.getUTCHours() + 1)
+
+    const tokenData = {
+      user_id: user.id,
+      token: resetToken,
+      expires_in: expiresDate
+    }
+
+    await tokensRepository.create(tokenData)
   }
 }
 

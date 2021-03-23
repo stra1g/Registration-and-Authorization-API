@@ -3,12 +3,12 @@ import crypto from 'crypto'
 import hash from '../utils/hash'
 
 interface Token {
-  id: number
+  id?: number
   user_id: Number
   token: string
   expires_in: Date
-  created_at: Date
-  updated_at: Date
+  created_at?: Date 
+  updated_at?: Date
 }
 
 const create = (data: Token) => (
