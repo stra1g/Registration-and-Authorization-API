@@ -34,18 +34,18 @@ const findByEmail = async (email: string) => {
   const user = await knex('users').where('email', email).select('*').first()
 
   if (user){
-    return true
+    return user
   }
-  return false
+  return null
 }
 
 const findByUsername = async (username: string) => {
   const user = await knex('users').where('username', username).select('*').first()
 
   if (user){
-    return true
+    return user
   }
-  return false
+  return null
 }
 
 const setCache = (user:UserData) => (
