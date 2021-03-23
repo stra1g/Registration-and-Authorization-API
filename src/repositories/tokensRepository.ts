@@ -11,6 +11,14 @@ interface Token {
   updated_at: Date
 }
 
+const create = (data: Token) => (
+  knex('tokens').insert({
+    user_id: data.user_id,
+    token: data.token,
+    expires_in: data.expires_in
+  })
+)
+
 const findByUser = async (userId: number) => {
   const token: Token = await knex('tokens').where('user_id', userId).select('*').first()
   
@@ -34,6 +42,7 @@ const generate = async () => {
 export default {
   findByUser,
   destroy,
-  generate
+  generate,
+  create
 }
 
