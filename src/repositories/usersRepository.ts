@@ -31,7 +31,7 @@ const create = async (userData:UserData) => {
 }
 
 const findByEmail = async (email: string) => {
-  const user = await knex('users').where('email', email).select('*').first()
+  const user: UserData = await knex('users').where('email', email).select('*').first()
 
   if (user){
     return user
@@ -40,7 +40,7 @@ const findByEmail = async (email: string) => {
 }
 
 const findByUsername = async (username: string) => {
-  const user = await knex('users').where('username', username).select('*').first()
+  const user: UserData = await knex('users').where('username', username).select('*').first()
 
   if (user){
     return user
