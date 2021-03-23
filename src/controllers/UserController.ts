@@ -50,7 +50,10 @@ class UserController {
 
     const userExists = await userRepository.findByUsername(String(username))
     
-    return response.status(200).json({userExists})
+    if (userExists){
+      return response.status(200).json({userExists: true})
+    }
+    return response.status(200).json({userExists: false})
   }
 }
 
