@@ -1,4 +1,6 @@
 import knex from '../database/connection'
+import crypto from 'crypto'
+import hash from '../utils/hash'
 
 interface Token {
   id: number
@@ -22,8 +24,16 @@ const destroy = (userId: number) => (
   knex('tokens').where('user_id', userId).del()
 )
 
+const generate = async () => {
+  const resetToken = crypto.randomBytes(32).toString('hex')
+  const hashedToken = await hash.make(resetToken)
+
+  return hashedToken
+}
+
 export default {
   findByUser,
-  destroy
+  destroy,
+  generate
 }
 
