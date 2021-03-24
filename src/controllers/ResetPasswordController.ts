@@ -43,6 +43,9 @@ class ResetPasswordController {
 
     return response.json({message: 'ok'})
   }
+  async updatePassword(request: Request, response: Response){
+    
+  }
 }
 
 export default ResetPasswordController
