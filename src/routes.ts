@@ -19,6 +19,7 @@ routes.get('/register/checkUsername', userController.findByUsername)
 routes.post('/login', authController.login)
 
 routes.post('/reset-password', resetPasswordController.sendResetLink)
+routes.put('reset-password', resetPasswordController.updatePassword)
 
 routes.use(auth)
 
