@@ -35,6 +35,7 @@ class ResetPasswordController {
     const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}`
 
     const context = {
+      user_id: user.id,
       email: user.email,
       username: user.username
     }
@@ -44,6 +45,9 @@ class ResetPasswordController {
     return response.json({message: 'ok'})
   }
   async updatePassword(request: Request, response: Response){
+    const { password } = request.body
+    const { token } = request.query
+
     
   }
 }
