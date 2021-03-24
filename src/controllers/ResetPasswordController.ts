@@ -34,7 +34,12 @@ class ResetPasswordController {
 
     const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}`
 
-    await sendMail(email, link)
+    const context = {
+      email: user.email,
+      username: user.username
+    }
+
+    await sendMail(context, link)
 
     return response.json({message: 'ok'})
   }

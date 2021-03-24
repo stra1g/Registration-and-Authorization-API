@@ -3,7 +3,12 @@ import handlebars from 'handlebars'
 import fs from 'fs'
 import path from 'path'
 
-const sendMail = async (emailTo: string, link: any) => {
+interface Context {
+  email: string
+  username: string
+}
+
+const sendMail = async (user: Context, link: any) => {
   try {
 
     const transport = nodemailer.createTransport({
@@ -25,10 +30,13 @@ const sendMail = async (emailTo: string, link: any) => {
     console.log(link)
     await transport.sendMail({
       from: '"My APP" <luis16vitor48@gmail.com>',
-      to: emailTo,
+      to: user.email,
       subject: 'Hello teste',
       text: 'Hello world',
-      html: template({link: link}),
+      html: template({
+              link: link,
+              username: user.username,
+            }),
     })
 
     return 
