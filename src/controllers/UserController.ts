@@ -8,7 +8,7 @@ class UserController {
   async create(request: Request, response: Response) {
     try {
       const userData = request.body
-
+      
       const { error } = validation.registerValidation(userData)
       if (error) {
         throw new Error(ERR_INVALID_DATA)

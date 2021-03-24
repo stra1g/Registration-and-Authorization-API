@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import usersRepository from '../repositories/usersRepository'
-import tokensRepository from '../repositories/tokensRepository'
+import tokensRepository from '../repositories/tokensRepository' 
+import sendMail from '../services/email/sendMail'
 
 class ResetPasswordController {
   async sendResetLink(request: Request, response: Response){
@@ -30,6 +31,12 @@ class ResetPasswordController {
     }
 
     await tokensRepository.create(tokenData)
+
+    const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}`
+
+    await sendMail(email)
+
+    return response.json({message: 'ok'})
   }
 }
 
