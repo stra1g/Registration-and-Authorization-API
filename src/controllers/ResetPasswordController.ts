@@ -70,7 +70,11 @@ class ResetPasswordController {
 
     const hashedPassword = await hash.make(password)
 
-    await knex('users').where({id: user_id}).update({password: hashedPassword, updated_at: currentDate})
+    await usersRepository.updatePassword(hashedPassword, Number(user_id), currentDate)
+
+    await tokensRepository.destroy(Number(user_id))
+
+    return response.status(201)
   }
 }
 
