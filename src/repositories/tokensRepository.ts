@@ -4,7 +4,7 @@ import hash from '../utils/hash'
 
 interface Token {
   id?: number
-  user_id: Number
+  user_id: number
   token: string
   expires_in: Date
   created_at?: Date 
@@ -39,10 +39,15 @@ const generate = async () => {
   return hashedToken
 }
 
+const compare = async (value: string, valueHashed: string) => {
+  return hash.compare(value, valueHashed)
+}
+
 export default {
   findByUser,
   destroy,
   generate,
-  create
+  create,
+  compare
 }
 

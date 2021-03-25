@@ -48,6 +48,9 @@ const findByUsername = async (username: string) => {
   return null
 }
 
+const updatePassword = (password:string, userId: number) => knex('users').where({id: userId}).update({password})
+
+
 const setCache = (user:UserData) => (
     Cache.set(`${PREFIX_CACHE}${user.id}`, JSON.stringify(user), LOGIN_EXPIRATION_TIME)
 )
@@ -61,5 +64,6 @@ export default {
     findByEmail,
     findByUsername,
     setCache,
-    removeCache
+    removeCache,
+    updatePassword
 }

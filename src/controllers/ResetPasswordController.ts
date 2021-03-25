@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import usersRepository from '../repositories/usersRepository'
 import tokensRepository from '../repositories/tokensRepository' 
 import sendMail from '../services/email/sendMail'
+import hash from '../utils/hash'
+import knex from '../database/connection'
 
 class ResetPasswordController {
   async sendResetLink(request: Request, response: Response){
@@ -32,10 +34,9 @@ class ResetPasswordController {
 
     await tokensRepository.create(tokenData)
 
-    const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}`
+    const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}?user_id=${user.id}`
 
     const context = {
-      user_id: user.id,
       email: user.email,
       username: user.username
     }
@@ -46,9 +47,30 @@ class ResetPasswordController {
   }
   async updatePassword(request: Request, response: Response){
     const { password } = request.body
-    const { token } = request.query
+    const { token, user_id } = request.query
 
-    
+    const tokenExists = await tokensRepository.findByUser(Number(user_id))
+
+    if (!tokenExists){
+      return 
+    }
+
+    const tokenIsOk = await tokensRepository.compare(String(token), tokenExists.token)
+
+    if (!tokenIsOk){
+      return 
+    }
+
+    const currentDate = new Date()
+    const expiresDate = tokenExists.expires_in
+
+    if (currentDate > expiresDate){
+      return 
+    }
+
+    const hashedPassword = await hash.make(password)
+
+    await knex('users').where({id: user_id}).update({password: hashedPassword, updated_at: currentDate})
   }
 }
 
