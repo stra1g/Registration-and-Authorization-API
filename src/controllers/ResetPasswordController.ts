@@ -48,19 +48,16 @@ class ResetPasswordController {
   async updatePassword(request: Request, response: Response){
     const { password } = request.body
     const { token, user_id } = request.query
-
     const tokenExists = await tokensRepository.findByUser(Number(user_id))
-
+  
     if (!tokenExists){
       return 
     }
 
-    const tokenIsOk = await tokensRepository.compare(String(token), tokenExists.token)
-
-    if (!tokenIsOk){
+    if (token !== tokenExists.token){
       return 
     }
-
+    
     const currentDate = new Date()
     const expiresDate = tokenExists.expires_in
 
