@@ -48,7 +48,9 @@ const findByUsername = async (username: string) => {
   return null
 }
 
-const updatePassword = (password:string, userId: number) => knex('users').where({id: userId}).update({password})
+const updatePassword = (password:string, userId: number, updated_at:Date) => (
+  knex('users').where({id: userId}).update({password, updated_at})
+)
 
 
 const setCache = (user:UserData) => (
