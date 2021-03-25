@@ -8,7 +8,7 @@ import knex from '../database/connection'
 class ResetPasswordController {
   async sendResetLink(request: Request, response: Response){
     const { email } = request.body
-    
+    console.log(email)
     const user = await usersRepository.findByEmail(email)
 
     if (!user){
@@ -34,7 +34,7 @@ class ResetPasswordController {
 
     await tokensRepository.create(tokenData)
 
-    const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}?user_id=${user.id}`
+    const link = `${process.env.CLIENT_URL}/password-reset?token=${resetToken}&user_id=${user.id}`
 
     const context = {
       email: user.email,
